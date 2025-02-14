@@ -6,7 +6,7 @@ from readers.monthly_tb_reader import read_monthly_tb_excel_dynamic
 from readers.gl_reader import read_gl_excel_dynamic
 
 from validators.trial_balance_validator import validate_trial_balance
-from validators.gl_validator import validate_gl
+from validators.general_ledger_validator import validate_gl
 from report import generate_html_report
 
 def main():

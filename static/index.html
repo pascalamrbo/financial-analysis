@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Document Uploader</title>
+</head>
+<body>
+    <h1>Upload Financial Document</h1>
+    <input type="file" id="fileUpload" name="file"><br><br>
+    <button onclick="uploadFile()">Upload File</button>
+
+    <div id="responseArea" style="margin-top: 20px;">
+        <p id="status"></p>
+        <p id="documentType"></p>
+        <p id="error"></p>
+    </div>
+
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileUpload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const statusOutput = document.getElementById('status');
+            const documentTypeOutput = document.getElementById('documentType');
+            const errorOutput = document.getElementById('error');
+
+            statusOutput.textContent = 'Uploading...';
+            documentTypeOutput.textContent = '';
+            errorOutput.textContent = '';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                statusOutput.textContent = 'Upload Complete.';
+
+                if (response.ok) {
+                    documentTypeOutput.textContent = 'Document Type: ' + data.document_type;
+                } else {
+                    errorOutput.textContent = 'Error: ' + (data.error || 'Unknown error');
+                }
+
+            } catch (error) {
+                statusOutput.textContent = 'Upload Failed.';
+                errorOutput.textContent = 'Network error occurred during upload.';
+                console.error("Fetch error:", error);
+            }
+        }
+    </script>
+</body>
+</html>
